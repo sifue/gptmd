@@ -1,0 +1,7 @@
+openai_api_key : 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
+history_file: ./history.md
+chatgpt_config:
+  model: gpt-3.5-turbo
+  max_tokens: 4000
+  temperature: 1
+  top_p: 1
