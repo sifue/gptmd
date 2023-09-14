@@ -10,6 +10,8 @@ lazy val root = project
 
     libraryDependencies += "io.circe" %% "circe-yaml" % "0.14.2",
     libraryDependencies += "io.circe" %% "circe-generic" % "0.14.2",
-    libraryDependencies += "com.theokanning.openai-gpt3-java" %% "api" % "0.16.0",
+    libraryDependencies += "com.theokanning.openai-gpt3-java" % "api" % "0.16.0",
+    libraryDependencies += "com.theokanning.openai-gpt3-java" % "client" % "0.16.0",
+    libraryDependencies += "com.theokanning.openai-gpt3-java" % "service" % "0.16.0",
     libraryDependencies += "org.scalameta" %% "munit" % "0.7.29" % Test
   )
