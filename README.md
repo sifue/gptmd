@@ -1,8 +1,8 @@
-## ChatGPT Markdown Commandline Application
+## ChatGPT Markdown Commandline Tool
 
 (開発中)
 
-マークダウン形式のファイルをインプットとして、そのマークダウンにChatGPTの続きを出力させるコマンドラインアプリケーションになる予定。
+マークダウン形式のファイルをインプットとして、そのマークダウンにChatGPTの続きを出力させるコマンドラインツールになる予定。
 
 現在、設定からモデル名を読み込みChatGPTのAPIにジョークを言わせるところまでの実装が完了。
 
