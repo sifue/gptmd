@@ -19,16 +19,27 @@ class ChatGPTService(config: Config):
     val historyFileOperator = HistoryFileOperator(config.history_file)
     val history = historyFileOperator.loadHistory()
 
-    println(history)
-  
-    val messages = Seq(ChatMessage("user", "こんにちは、ジョークを一つ教えてください。"))
-    request.setMessages(messages.asJava)
+    val chatMessages = history.map(message => {
+      val chatMessage = new ChatMessage()
+      chatMessage.setRole(message.role)
+      chatMessage.setContent(message.content)
+      chatMessage
+    })  
 
-    service.createChatCompletion(request)
-    .getChoices()
-    .forEach(choice => {
-      println(choice.getMessage().getContent())
-    })
+    request.setMessages(chatMessages.asJava)
+
+    chatMessages.foreach(chatMessage => {
+      println(s"${chatMessage.getRole()}:\n${chatMessage.getContent()}")
+    } )
+
+    println("================ 以上をリクエストで送信 ================")
+
+    val responseChoices = service.createChatCompletion(request).getChoices()
+    val responseChatMessage = responseChoices.get(0).getMessage()
+    val newMessage = Message(responseChatMessage.getRole(), responseChatMessage.getContent())
+
+    println(s"${newMessage.role}:\n${newMessage.content}")
+    historyFileOperator.append(newMessage)
 
   def shutdown(): Unit =
     service.shutdownExecutor()
