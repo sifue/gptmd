@@ -19,12 +19,8 @@ class ChatGPTService(config: Config):
     val historyFileOperator = HistoryFileOperator(config.history_file)
     val history = historyFileOperator.loadHistory()
 
-    val chatMessages = history.map(message => {
-      val chatMessage = new ChatMessage()
-      chatMessage.setRole(message.role)
-      chatMessage.setContent(message.content)
-      chatMessage
-    })  
+    val chatMessages = 
+      history.map(message => ChatMessage(message.role, message.content))
 
     request.setMessages(chatMessages.asJava)
 
