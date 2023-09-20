@@ -18,6 +18,20 @@ sbt run
 - `<!-- gptmd-system-begin --> <!-- gptmd-system-end -->` で囲まれた部分は、システム発言
 
 
+#### サンプル
+```markdown
+<!-- gptmd-system-begin -->
+You are ChatGPT, a large language model trained by OpenAI.
+Carefully heed the user's instructions.
+Respond using Markdown in Japanese.
+<!-- gptmd-system-end -->
+
+<!-- gptmd-user-begin -->
+こんにちは、ジョークを一つ教えてください。
+<!-- gptmd-user-end -->
+```
+
+
 ### 利用ライブラリ
 
 - [circe-yaml](https://github.com/circe/circe-yaml)
