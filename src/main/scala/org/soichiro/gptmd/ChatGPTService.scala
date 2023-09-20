@@ -10,12 +10,23 @@ class ChatGPTService(config: Config):
   val service = new OpenAiService(config.openai_api_key)
   def chat(): Unit =
 
-    val chatCompletionRequest = new ChatCompletionRequest();
-    chatCompletionRequest.setModel(config.chatgpt_config.model)
-    val messages = Seq(ChatMessage("user", "こんにちは、ジョークを一つ教えてください。"))
-    chatCompletionRequest.setMessages(messages.asJava)
+    val request = new ChatCompletionRequest()
+    request.setModel(config.chatgpt_config.model)
+    request.setMaxTokens(config.chatgpt_config.max_tokens)
+    request.setTemperature(config.chatgpt_config.temperature)
+    request.setTopP(config.chatgpt_config.top_p)
 
-    service.createChatCompletion(chatCompletionRequest).getChoices().forEach(choice => {
+    val historyFileOperator = HistoryFileOperator(config.history_file)
+    val history = historyFileOperator.loadHistory()
+
+    println(history)
+  
+    val messages = Seq(ChatMessage("user", "こんにちは、ジョークを一つ教えてください。"))
+    request.setMessages(messages.asJava)
+
+    service.createChatCompletion(request)
+    .getChoices()
+    .forEach(choice => {
       println(choice.getMessage().getContent())
     })
 

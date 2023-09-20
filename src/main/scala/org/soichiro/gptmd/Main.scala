@@ -6,6 +6,5 @@ import org.soichiro.gptmd.ConfigLoader
   val config = configLoader.load()
   val service = ChatGPTService(config)
   service.chat()
-
   service.shutdown()
   println("finished.")
