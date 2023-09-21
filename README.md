@@ -6,7 +6,7 @@
 - config.yml
 - history.md
 
-以上を用意してください。
+以上を実行ディレクトリに用意してください。
 
 #### config.ymlの仕様
 
@@ -51,6 +51,8 @@ Scalaのセットアップは、[Getting Started | Scala Documentation](https://
 ```
 sbt run
 ```
+
+以上でビルドと実行が行われます。
 
 ### über jarのビルド方法、実行方法
 実行可能なüber jarをビルドする方法は、
