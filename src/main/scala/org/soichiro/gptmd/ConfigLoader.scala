@@ -8,8 +8,18 @@ import io.circe._
 import io.circe.generic.auto._
 import io.circe.yaml.parser
 
-case class ChatGptConfig(model: String, max_tokens: Int, temperature: Double, top_p: Double, timeout: Int)
-case class Config(openai_api_key: String, history_file: String, chatgpt_config: ChatGptConfig)
+case class ChatGptConfig(
+    model: String,
+    max_tokens: Int,
+    temperature: Double,
+    top_p: Double,
+    timeout: Int
+)
+case class Config(
+    openai_api_key: String,
+    history_file: String,
+    chatgpt_config: ChatGptConfig
+)
 
 class ConfigLoader:
 
@@ -17,9 +27,7 @@ class ConfigLoader:
     Using(Source.fromFile("config.yml")) { source =>
       val json = parser.parse(source.mkString)
       json
-      .leftMap(err => err: Error)
-      .flatMap(_.as[Config])
-      .valueOr(throw _)
+        .leftMap(err => err: Error)
+        .flatMap(_.as[Config])
+        .valueOr(throw _)
     }.getOrElse(throw new Exception("config.yml is not found"))
-    
-    

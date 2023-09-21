@@ -11,7 +11,7 @@ import collection.JavaConverters.seqAsJavaListConverter
 class ChatGPTService(config: Config):
   val service = new OpenAiService(
     config.openai_api_key,
-    Duration.ofSeconds(config.chatgpt_config.timeout),
+    Duration.ofSeconds(config.chatgpt_config.timeout)
   )
 
   def chat(): Unit =
@@ -24,20 +24,21 @@ class ChatGPTService(config: Config):
     val historyFileOperator = HistoryFileOperator(config.history_file)
     val history = historyFileOperator.loadHistory()
 
-    val chatMessages = 
+    val chatMessages =
       history.map(message => ChatMessage(message.role, message.content))
 
     request.setMessages(chatMessages.asJava)
 
     chatMessages.foreach(chatMessage => {
       println(s"[${chatMessage.getRole()}]:\n${chatMessage.getContent()}")
-    } )
+    })
 
     println("================ request the above ================")
 
     val responseChoices = service.createChatCompletion(request).getChoices()
     val responseChatMessage = responseChoices.get(0).getMessage()
-    val newMessage = Message(responseChatMessage.getRole(), responseChatMessage.getContent())
+    val newMessage =
+      Message(responseChatMessage.getRole(), responseChatMessage.getContent())
 
     println(s"[${newMessage.role}]:\n${newMessage.content}")
     historyFileOperator.append(newMessage)
