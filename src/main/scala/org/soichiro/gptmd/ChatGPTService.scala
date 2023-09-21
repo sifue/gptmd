@@ -1,5 +1,7 @@
 package org.soichiro.gptmd
 
+import java.time.Duration
+
 import com.theokanning.openai.service.OpenAiService
 import com.theokanning.openai.completion.chat.ChatCompletionRequest
 import com.theokanning.openai.completion.chat.ChatMessage
@@ -7,9 +9,12 @@ import com.theokanning.openai.completion.chat.ChatMessage
 import collection.JavaConverters.seqAsJavaListConverter
 
 class ChatGPTService(config: Config):
-  val service = new OpenAiService(config.openai_api_key)
-  def chat(): Unit =
+  val service = new OpenAiService(
+    config.openai_api_key,
+    Duration.ofSeconds(config.chatgpt_config.timeout),
+  )
 
+  def chat(): Unit =
     val request = new ChatCompletionRequest()
     request.setModel(config.chatgpt_config.model)
     request.setMaxTokens(config.chatgpt_config.max_tokens)
@@ -25,16 +30,16 @@ class ChatGPTService(config: Config):
     request.setMessages(chatMessages.asJava)
 
     chatMessages.foreach(chatMessage => {
-      println(s"${chatMessage.getRole()}:\n${chatMessage.getContent()}")
+      println(s"[${chatMessage.getRole()}]:\n${chatMessage.getContent()}")
     } )
 
-    println("================ 以上をリクエストで送信 ================")
+    println("================ request the above ================")
 
     val responseChoices = service.createChatCompletion(request).getChoices()
     val responseChatMessage = responseChoices.get(0).getMessage()
     val newMessage = Message(responseChatMessage.getRole(), responseChatMessage.getContent())
 
-    println(s"${newMessage.role}:\n${newMessage.content}")
+    println(s"[${newMessage.role}]:\n${newMessage.content}")
     historyFileOperator.append(newMessage)
 
   def shutdown(): Unit =

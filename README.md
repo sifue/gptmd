@@ -18,6 +18,7 @@ chatgpt_config:
   max_tokens: 1000
   temperature: 1
   top_p: 1
+  timeout: 300 # seconds
 ```
 
 ### history.mdの仕様
@@ -54,6 +55,8 @@ sbt run
 sbt assembly
 java -jar target/scala-3.3.1/gptmd-assembly-1.0.0.jar
 ```
+
+バージョンは適宜変更してください。
 
 ### 利用ライブラリ
 

@@ -1,6 +1,7 @@
 package org.soichiro.gptmd
 
 import scala.io.Source
+import scala.util.Using
 import java.io.{File, FileWriter, BufferedWriter}
 
 val messageRegex = raw"(?s)<!-- gptmd-(user|assistant|system)-begin -->(.*?)<!-- gptmd-(user|assistant|system)-end -->".r
@@ -13,11 +14,11 @@ case class Message(role: String, content: String)
 class HistoryFileOperator(val historyFilePath: String):
 
   def loadHistory(): Seq[Message] =
+    val text = Using.resource(Source.fromFile(historyFilePath)) { source =>
+      // 大きいが一気に正規表現で処理するためメモリに載せる
+      source.getLines().toList.mkString("\n")
+    }
 
-    val source = Source.fromFile(historyFilePath)
-    // 大きいが一気に正規表現で処理するためメモリに載せる
-    val text = source.getLines().toList.mkString("\n") 
-    source.close()  
     val matches: Iterator[String] = messageRegex.findAllIn(text)
     
     matches.toList.map(message => {
@@ -31,15 +32,14 @@ class HistoryFileOperator(val historyFilePath: String):
 
   def append(message: Message) : Unit =
     val file = File(historyFilePath)
-    val bw = BufferedWriter(FileWriter(file, true))
 
-    try 
+    Using.resource(BufferedWriter(FileWriter(file, true))) { bw =>
       message match
         case Message("user", content) => 
-          bw.write(s"\n<!-- gptmd-user-begin -->\n${content}\n<!-- gptmd-user-end -->\n")
+          bw.write(s"\n<!-- gptmd-user-begin -->\n${content}\n<!-- gptmd-user-end -->")
         case Message("assistant", content) => 
-          bw.write(s"\n<!-- gptmd-assistant-begin -->\n${content}\n<!-- gptmd-assistant-end -->\n")    
+          bw.write(s"\n<!-- gptmd-assistant-begin -->\n${content}\n<!-- gptmd-assistant-end -->")    
         case Message("system", content) => 
-          bw.write(s"\n<!-- gptmd-system-begin -->\n${content}\n<!-- gptmd-system-end -->\n")
+          bw.write(s"\n<!-- gptmd-system-begin -->\n${content}\n<!-- gptmd-system-end -->")
         case _ => throw new Exception(s"Unknown role: ${message.role}") 
-    finally bw.close()      
+    }   

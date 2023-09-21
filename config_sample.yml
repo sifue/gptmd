@@ -5,3 +5,4 @@ chatgpt_config:
   max_tokens: 1000
   temperature: 1
   top_p: 1
+  timeout: 300 # seconds
