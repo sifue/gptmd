@@ -15,3 +15,12 @@ lazy val root = project
     libraryDependencies += "com.theokanning.openai-gpt3-java" % "service" % "0.16.0",
     libraryDependencies += "org.scalameta" %% "munit" % "0.7.29" % Test
   )
+
+  ThisBuild / assemblyMergeStrategy := {
+  case PathList("META-INF", "versions", "9", xs @ _*) => MergeStrategy.discard
+  case "config.yml" => MergeStrategy.discard
+  case "history.md" => MergeStrategy.discard
+  case x =>
+    val oldStrategy = (ThisBuild / assemblyMergeStrategy).value
+    oldStrategy(x)
+}
